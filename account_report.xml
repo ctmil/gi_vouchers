@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>	
+		<report id="report_account_voucher"
+			string="Recibo de Pago"
+			model="account.invoice"
+			report_type="qweb-pdf"
+			name="gi_vouchers.report_account_voucher_template"
+			/>
+
+		<template id="report_account_voucher_template">
+			<t t-call="report.html_container">
+				<t t-foreach="docs" t-as="o">
+					<t t-call="report.external_layout">
+						<div class="page">
+							<!-- Report page content -->
+							<div class="row">
+								<div class="col-xs-12">
+									<h1>Recibo de Pago</h1>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<h3>Factura <span t-field="o.internal_number" /></h3>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<table class="table table-condensed">
+										<thead>
+											<th>Cliente</th>
+											<th>Fecha</th>
+											<th>Monto Total</th>
+											<th>Saldo</th>
+										</thead>
+										<tbody class="sale_tbody">
+											<tr>
+									                        <td>
+										                          <span t-field="o.partner_id.name"/>
+									                        </td>
+									                        <td>
+										                          <span t-field="o.date_invoice"/>
+									                        </td>
+									                        <td>
+										                          <span t-field="o.amount_total"
+														t-field-options='{"widget": "monetary", 
+															"display_currency": "o.company_id.currency_id"}'/>
+									                        </td>
+									                        <td>
+										                          <span t-field="o.residual"
+														t-field-options='{"widget": "monetary", 
+															"display_currency": "o.company_id.currency_id"}'/>
+								        	                </td>
+										        </tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<h3>Pagos</h3>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<table class="table table-condensed">
+										<thead>
+											<th>Fecha</th>
+											<th>ID</th>
+											<th>Ref</th>
+											<th>Método de Pago</th>
+											<th>Monto</th>
+										</thead>
+										<tbody class="sale_tbody">
+                                                                                	<tr t-foreach="o.payment_ids" t-as="p">
+									                        <td>
+										                          <span t-field="p.date"/>
+									                        </td>
+									                        <td>
+										                          <span t-field="p.move_id.name"/>
+									                        </td>
+									                        <td>
+										                          <span t-field="p.ref"/>
+									                        </td>
+									                        <td>
+										                          <span t-field="p.journal_id.name"/>
+									                        </td>
+									                        <td>
+										                          <span t-field="p.credit"
+														t-field-options='{"widget": "monetary", 
+															"display_currency": "p.company_id.currency_id"}'/>
+									                        </td>
+										        </tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</t>	<!-- t-call external_layout -->
+				</t>	<!-- t-foreach -->
+			</t> <!-- t-call html_container -->
+		</template>
+
+	</data>
+</openerp>
