@@ -1,6 +1,139 @@
 <?xml version="1.0"?>
 <openerp>
 	<data>	
+
+		<report id="report_account_voucher_payment"
+			string="Recibo de Pago"
+			model="account.voucher"
+			report_type="qweb-pdf"
+			name="gi_vouchers.report_account_voucher_payment_template"
+			/>
+
+		<template id="report_account_voucher_payment_template">
+			<t t-call="report.html_container">
+				<t t-foreach="docs" t-as="o">
+					<t t-call="report.external_layout">
+						<div class="page">
+							<!-- Report page content -->
+							<div class="row">
+								<div class="col-xs-12">
+									<h3>Recibo de Pago <span t-field="o.name" /> - Estado <span t-field="o.state" /></h3>
+								</div>
+							</div>
+							<div class="row" >
+								<div class="col-xs-12">
+									<table class="table table-condensed">
+										<thead>
+											<th>Cliente</th>
+											<th>Fecha</th>
+											<th>Método de Pago</th>
+											<th>Referencia</th>
+											<th>Monto</th>
+										</thead>
+										<tbody class="sale_tbody">
+											<tr>
+									                        <td>
+										                          <span t-field="o.partner_id.name"/>
+									                        </td>
+									                        <td>
+										                          <span t-field="o.date"/>
+									                        </td>
+									                        <td>
+										                          <span t-field="o.journal_id.name"/>
+									                        </td>
+									                        <td>
+										                          <span t-field="o.reference"/>
+									                        </td>
+									                        <td>
+										                          <span t-field="o.amount"
+														t-field-options='{"widget": "monetary", 
+															"display_currency": "o.company_id.currency_id"}'/>
+									                        </td>
+										        </tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div class="row" t-if="o.line_cr_ids">
+								<div class="col-xs-12">
+									<h4>Débitos</h4>
+								</div>
+							</div>
+							<div class="row" t-if="o.line_cr_ids">
+								<div class="col-xs-12">
+									<table class="table table-condensed">
+										<thead>
+											<th>Mov. Contable</th>
+											<th>Monto Original</th>
+											<th>Conciliación Total</th>
+											<th>Monto Alocado</th>
+										</thead>
+										<tbody class="sale_tbody">
+											<tr t-foreach="o.line_cr_ids" t-as="c">
+												<td>
+													<span t-field="c.move_line_id.ref" />
+												</td>
+												<td>
+													<span t-field="c.amount_original"
+                                                                                                                  t-field-options='{"widget": "monetary", 
+                                                                                                                          "display_currency": "o.company_id.currency_id"}'/>
+												</td>
+												<td>
+													<span t-field="c.reconcile" />
+												</td>
+												<td>
+													<span t-field="c.amount"
+                                                                                                                  t-field-options='{"widget": "monetary", 
+                                                                                                                          "display_currency": "o.company_id.currency_id"}'/>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div class="row" t-if="o.line_dr_ids">
+								<div class="col-xs-12">
+									<h4>Débitos</h4>
+								</div>
+							</div>
+							<div class="row" t-if="o.line_dr_ids">
+								<div class="col-xs-12">
+									<table class="table table-condensed">
+										<thead>
+											<th>Mov. Contable</th>
+											<th>Monto Original</th>
+											<th>Conciliación Total</th>
+											<th>Monto Alocado</th>
+										</thead>
+										<tbody class="sale_tbody">
+											<tr t-foreach="o.line_dr_ids" t-as="d">
+												<td>
+													<span t-field="d.move_line_id.ref" />
+												</td>
+												<td>
+													<span t-field="d.amount_original"
+                                                                                                                  t-field-options='{"widget": "monetary", 
+                                                                                                                          "display_currency": "o.company_id.currency_id"}'/>
+												</td>
+												<td>
+													<span t-field="d.reconcile" />
+												</td>
+												<td>
+													<span t-field="d.amount"
+                                                                                                                  t-field-options='{"widget": "monetary", 
+                                                                                                                          "display_currency": "o.company_id.currency_id"}'/>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</t>
+				</t>
+			</t>
+		</template>
+
 		<report id="report_account_voucher"
 			string="Recibo de Pago"
 			model="account.invoice"
@@ -24,7 +157,7 @@
 									<h3>Factura <span t-field="o.internal_number" /></h3>
 								</div>
 							</div>
-							<div class="row">
+							<div class="row" >
 								<div class="col-xs-12">
 									<table class="table table-condensed">
 										<thead>
@@ -61,7 +194,7 @@
 									<h3>Pagos</h3>
 								</div>
 							</div>
-							<div class="row">
+							<div class="row" t-if="o.payment_ids">
 								<div class="col-xs-12">
 									<table class="table table-condensed">
 										<thead>
@@ -93,6 +226,11 @@
 										        </tr>
 										</tbody>
 									</table>
+								</div>
+							</div>
+							<div class="row" t-if="o.autopay">
+								<div class="col-xs-12">
+									<span>Pago realizado en cuenta corriente. Por favor, solicite el reporte de cuenta corriente a su vendedor.</span>
 								</div>
 							</div>
 						</div>
