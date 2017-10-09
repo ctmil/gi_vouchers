@@ -128,6 +128,45 @@
 									</table>
 								</div>
 							</div>
+							<div class="row" t-if="o.received_third_check_ids">
+								<div class="col-xs-12">
+									<h4>Cheques</h4>
+								</div>
+							</div>
+							<div class="row" t-if="o.received_third_check_ids">
+								<div class="col-xs-12">
+									<table class="table table-condensed">
+										<thead>
+											<th>Número</th>
+											<th>Fecha Emisión</th>
+											<th>Fecha Pago</th>
+											<th>Banco</th>
+											<th>Monto</th>
+										</thead>
+										<tbody class="sale_tbody">
+											<tr t-foreach="o.received_third_check_ids" t-as="c">
+												<td>
+													<span t-field="c.number" />
+												</td>
+												<td>
+													<span t-field="c.issue_date" />
+												</td>
+												<td>
+													<span t-field="c.payment_date" />
+												</td>
+												<td>
+													<span t-field="d.bank_id.name" />
+												</td>
+												<td>
+													<span t-field="d.amount"
+                                                                                                                  t-field-options='{"widget": "monetary", 
+                                                                                                                          "display_currency": "o.company_id.currency_id"}'/>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
 						</div>
 					</t>
 				</t>
